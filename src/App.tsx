@@ -4,6 +4,8 @@ import { type SubmitHandler, useForm } from "react-hook-form";
 import { type FormData, schema } from "@/lib/schema";
 
 export function App() {
+  // vi bruger Omit til at lave en type, der minder om FormData,
+  // men hvor vi specifikt fjerner password-felterne, da de ikke skal gemmes i staten.
   const [submitted, setSubmitted] = useState<Omit<
     FormData,
     "password" | "confirmPassword"
@@ -20,6 +22,9 @@ export function App() {
   });
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
+    // vi bruger destructuring til at hive password-felterne ud,
+    // og samler resten af felterne i 'rest' variablen vha. spread operator (...).
+    // på den måde undgår vi at gemme/vise adgangskoderne i vores state.
     const { password, confirmPassword, ...rest } = data;
     setSubmitted(rest);
   };
