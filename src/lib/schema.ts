@@ -22,10 +22,9 @@ export const schema = z
         /[!@#$%^&*]/,
         "Adgangskode skal indeholde mindst ét specialtegn (!@#$%^&*)"
       ),
-    confirmPassword: z.string(),
-    birthday: z
-      .date("Ugyldig fødselsdato")
-      .transform((val) => new Date(val))
+    confirmPassword: z.string().min(1, "Bekræft adgangskode er påkrævet"),
+    birthday: z.coerce
+      .date({ message: "Ugyldig fødselsdato" })
       .refine(
         (date) => date >= new Date(1900, 0, 1),
         "Fødselsdato skal være efter 1900"
