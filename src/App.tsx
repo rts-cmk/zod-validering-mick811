@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { schema, type FormData } from "@/lib/schema";
+import { type FormData, schema } from "@/lib/schema";
 
 export function App() {
   const [submitted, setSubmitted] = useState<Omit<
@@ -12,6 +12,7 @@ export function App() {
   const {
     register,
     handleSubmit,
+    trigger,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -47,7 +48,15 @@ export function App() {
 
         {/* Password */}
         <label htmlFor="password">Password:</label>
-        <input type="password" {...register("password", { required: true })} />
+        <input
+          type="password"
+          {...register("password", { required: true })}
+          onChange={(e) => {
+            register("password").onChange(e);
+            // tjek altid confirmPassword igen når password ændres, så de holdes synkroniseret
+            trigger("confirmPassword");
+          }}
+        />
         {errors.password && (
           <span className="error">{errors.password.message}</span>
         )}
